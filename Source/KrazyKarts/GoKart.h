@@ -27,6 +27,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	// 차의 중량
+	UPROPERTY(EditAnywhere)
+	float Mass = 1000;
+
+	// 쓰로틀이 완전히 내려갔을 때 차에 가해지는 힘
+	UPROPERTY(EditAnywhere)
+	float MaxDrivingForce = 10000;
+
 	void MoveForward(float Value);
 	FVector Velocity;
+	float Throttle;
 };
