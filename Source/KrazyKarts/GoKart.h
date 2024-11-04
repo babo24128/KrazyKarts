@@ -29,6 +29,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	FVector GetResistance();
+
 	void ApplyRotation(float DeltaTime);
 
 	void UpdateLocationFromVelocity(float DeltaTime);
@@ -44,6 +46,10 @@ private:
 	// full control throw 에서 초당 회전한 도 수(degrees/s)
 	UPROPERTY(EditAnywhere)
 	float MaxDegreesPerSecond = 90;
+
+	// 높을수록 더 많은 항력
+	UPROPERTY(EditAnywhere)
+	float DragCoefficient = 16;
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
