@@ -44,9 +44,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MaxDrivingForce = 10000;
 
-	// full control throw 에서 초당 회전한 도 수(degrees/s)
+	// 완전히 돌린 상태에서 자동차 회전 반경의 최소 반지름(m)
 	UPROPERTY(EditAnywhere)
-	float MaxDegreesPerSecond = 90;
+	float MinTurningRadius = 10;
 
 	// 높을수록 더 많은 항력
 	UPROPERTY(EditAnywhere)
