@@ -29,7 +29,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	FVector GetResistance();
+	FVector GetAirResistance();
+	FVector GetRollingResistance();
 
 	void ApplyRotation(float DeltaTime);
 
@@ -50,6 +51,10 @@ private:
 	// 높을수록 더 많은 항력
 	UPROPERTY(EditAnywhere)
 	float DragCoefficient = 16;
+
+	// 높을수록 구름저항이 크다
+	UPROPERTY(EditAnywhere)
+	float RollingResistanceCoefficient = 0.015;
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
