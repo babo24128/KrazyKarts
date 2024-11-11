@@ -19,14 +19,18 @@ AGoKart::AGoKart()
 void AGoKart::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (HasAuthority())
+	{
+		NetUpdateFrequency = 1;
+	}
 	
 }
 
 void AGoKart::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AGoKart, ReplicatedLocation);
-	DOREPLIFETIME(AGoKart, ReplicatedRotation);
+	DOREPLIFETIME(AGoKart, ReplicatedTransform);
 }
 
 FString GetEnumText(ENetRole Role)
@@ -66,17 +70,16 @@ void AGoKart::Tick(float DeltaTime)
 
 	if (HasAuthority())
 	{
-		ReplicatedLocation = GetActorLocation();
-		ReplicatedRotation = GetActorRotation();
-	}
-	else
-	{
-		SetActorLocation(ReplicatedLocation);
-		SetActorRotation(ReplicatedRotation);
+		ReplicatedTransform = GetActorTransform();
 	}
 
 	// 인강에서는 GetEnumText(Role) 을 사용했으나 언리얼엔진 최신 버전에서는 Role 멤버가 Actor 클래스에서 직접적으로 접근 불가능한 멤버로 바뀌어서 GetLocalRole()을 대신 사용
 	DrawDebugString(GetWorld(), FVector(0, 0, 100), GetEnumText(GetLocalRole()), this, FColor::White, DeltaTime);
+}
+
+void AGoKart::OnRep_ReplicatedTransform()
+{
+	SetActorTransform(ReplicatedTransform);
 }
 
 FVector AGoKart::GetAirResistance()
@@ -138,6 +141,8 @@ void AGoKart::MoveRight(float Value)
 	SteeringThrow = Value;
 	Server_MoveRight(Value);
 }
+
+
 
 
 void AGoKart::Server_MoveForward_Implementation(float Value)
