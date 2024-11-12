@@ -37,6 +37,7 @@ void AGoKart::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 
 }
 
+
 FString GetEnumText(ENetRole Role)
 {
 	switch (Role)
