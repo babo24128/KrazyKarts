@@ -57,23 +57,28 @@ void AGoKart::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (IsLocallyControlled())
+
+	if (GetLocalRole() == ROLE_AutonomousProxy)
 	{
-		FGoKartMove Move = CreateMove(DeltaTime);
-		
-		if (!HasAuthority())
-		{
-			UnacknowledgedMoves.Add(Move);
-
-			UE_LOG(LogTemp, Warning, TEXT("Queue Length : %d"), UnacknowledgedMoves.Num());
-		}
-		
-
-		Server_SendMove(Move);
-
+		FGoKartMove Move = CreateMove(DeltaTime);	
 		SimulateMove(Move);
+
+		UnacknowledgedMoves.Add(Move);
+		Server_SendMove(Move);
 	}
 
+	// 우리는 서버이며 Pawn을 제어합니다
+	if (GetLocalRole() == ROLE_Authority && IsLocallyControlled())
+	{
+		FGoKartMove Move = CreateMove(DeltaTime);
+		Server_SendMove(Move);
+
+	}
+
+	if (GetLocalRole() == ROLE_SimulatedProxy)
+	{
+		SimulateMove(ServerState.LastMove);
+	}
 
 	// 인강에서는 GetEnumText(Role) 을 사용했으나 언리얼엔진 최신 버전에서는 Role 멤버가 Actor 클래스에서 직접적으로 접근 불가능한 멤버로 바뀌어서 GetLocalRole()을 대신 사용
 	DrawDebugString(GetWorld(), FVector(0, 0, 100), GetEnumText(GetLocalRole()), this, FColor::White, DeltaTime);
